@@ -3,23 +3,52 @@ import { Repository } from 'typeorm';
 import { Movie } from '../movie.entity';
 import { MOVIE_REPOSITORY } from '../../../config/constants';
 import { MovieDto } from '../api/movie.dto';
+import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class MovieService {
     constructor(
         @Inject(MOVIE_REPOSITORY)
-        private readonly repository: Repository<Movie>
+        private readonly repository: Repository<Movie>,
+        private readonly cacheService: RedisService
     ) { }
     
     async findAll(): Promise<Movie[]> {
-        return await this.repository.find();
+        const cacheKey = 'movies';
+        const cachedMovies = await this.cacheService.getData(cacheKey);
+
+        if (!cachedMovies) {
+            const movies = await this.repository.find();
+            
+            const expiresIn = ((1 * 60) * 60);
+            await this.cacheService.setData(cacheKey, JSON.stringify(movies), expiresIn);
+
+            return movies;
+        }
+
+        return JSON.parse(cachedMovies);
     }
     async findOne(movieId: string): Promise<Movie> {
-        const movieFound = await this.repository.findBy({ id: movieId });
-        return movieFound[0];
+        const cacheKey = `movies:${movieId}`;
+        const cachedTargetMovie = await this.cacheService.getData(cacheKey);
+
+        if (!cachedTargetMovie) {
+            const targetMovie = (await this.repository.findBy({ id: movieId }))[0];
+            
+            const expiresIn = ((1 * 60) * 60);
+            await this.cacheService.setData(cacheKey, JSON.stringify(targetMovie), expiresIn);
+            
+            return targetMovie;
+        }
+
+        return JSON.parse(cachedTargetMovie);
     }
     async createOne(newMovie: MovieDto): Promise<Movie> {
-        return await this.repository.save(newMovie);
+        const createdMovie = await this.repository.save(newMovie);
+
+        await this.cacheService.deleteKey('movies');
+
+        return createdMovie;
     }
     async updateOne(movieId: string, movieUpdates: MovieDto): Promise<Movie> {
         const movieToUpdate = await this.findOne(movieId);
@@ -27,9 +56,13 @@ export class MovieService {
         const updated = Object.assign({}, movieToUpdate, movieUpdates);
         updated.id = movieToUpdate.id;
 
+        await this.cacheService.deleteKeys(['movies', `movies:${movieId}`]);
+
         return await this.repository.save(updated);
     }
     async deleteOne(movieId: string): Promise<void> {
         await this.repository.delete(movieId);
+
+        await this.cacheService.deleteKeys(['movies', `movies:${movieId}`]);
     }
 }
