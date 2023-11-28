@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MovieModule } from './modules/movies/movie.module';
+import { MovieModule } from './movies/movie.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

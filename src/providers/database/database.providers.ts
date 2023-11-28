@@ -13,7 +13,7 @@ export const databaseProviders = [
                 password: process.env.PG_PASSWORD,
                 database: process.env.PG_DATABASE,
                 entities: [
-                    __dirname + '/../../modules/**/*.entity{.ts,.js}',
+                    __dirname + '/../../**/*.entity{.ts,.js}',
                 ],
                 // synchronize: true,
             });

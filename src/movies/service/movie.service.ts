@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Movie } from '../movie.entity';
-import { MOVIE_REPOSITORY } from '../../../config/constants';
+import { MOVIE_REPOSITORY } from '../../config/constants';
 import { MovieDto } from '../api/movie.dto';
 import { RedisService } from '../../redis/redis.service';
 
