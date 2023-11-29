@@ -7,6 +7,7 @@ import { Movie } from 'src/movies/movie.entity';
 describe('Application - e2e', () => {
     let app: INestApplication;
     let createdMovie: Movie;
+    let authToken: string;
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,9 +18,40 @@ describe('Application - e2e', () => {
         await app.init();
     });
 
+    it('Creates a user successfully', async () => {
+        const res = await request(app.getHttpServer())
+        .post('/auth/signup')
+        .send({
+            email: 'admin2@mail.com',
+            password: 'adminpassword123'
+        });
+
+        expect(res.status).toBe(201);
+        expect(res.body).toMatchObject({
+            accessToken: expect.any(String)
+        });
+    });
+
+    it('Returns an access token when user successfully logs in', async () => {
+        const res = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+            email: 'admin@mail.com',
+            password: 'adminpassword123'
+        });
+
+        authToken = res.body.accessToken;
+
+        expect(res.status).toBe(201);
+        expect(res.body).toMatchObject({
+            accessToken: expect.any(String)
+        });
+    });
+
     it('Gets an array with all movies', async () => {
         const res = await request(app.getHttpServer())
-        .get('/movies');
+        .get('/movies')
+        .set('Authorization', authToken);
 
         expect(res.status).toBe(200);
         expect(Array.isArray(res.body)).toBeTruthy();
@@ -34,7 +66,8 @@ describe('Application - e2e', () => {
 
         const res = await request(app.getHttpServer())
         .post('/movies')
-        .send(reqBody);
+        .send(reqBody)
+        .set('Authorization', authToken);
 
         createdMovie = res.body;
 
@@ -54,7 +87,8 @@ describe('Application - e2e', () => {
 
         const res = await request(app.getHttpServer())
         .put(`/movies/${createdMovie.id}`)
-        .send(reqBody);
+        .send(reqBody)
+        .set('Authorization', authToken);
 
         createdMovie = res.body;
 
@@ -67,7 +101,8 @@ describe('Application - e2e', () => {
 
     it('Gets only one movie', async () => {
         const res = await request(app.getHttpServer())
-        .get(`/movies/${createdMovie.id}`);
+        .get(`/movies/${createdMovie.id}`)
+        .set('Authorization', authToken);
 
         expect(res.status).toBe(200);
         expect(res.body).toMatchObject(createdMovie);
@@ -75,7 +110,8 @@ describe('Application - e2e', () => {
 
     it('Deletes a movie and returns an empty body', async () => {
         const res = await request(app.getHttpServer())
-        .delete(`/movies/${createdMovie.id}`);
+        .delete(`/movies/${createdMovie.id}`)
+        .set('Authorization', authToken);
 
         expect(res.status).toBe(204);
         expect(res.body).toEqual({});
