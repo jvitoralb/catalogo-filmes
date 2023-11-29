@@ -13,7 +13,7 @@ A Stack do app consiste em:
 
 Com a exceção de Docker - `6m de exp.`, TypeScript - `2 anos de exp.` , PostgreSQL - `1 ano de exp.` e Swagger - `6m de exp.`, essa foi a minha primeira vez trabalhando com essas tecnologias, e posso dizer que gostei bastante, especialmente do framework Nestjs, que com certeza vou aprofundar os estudos sobre.
 
-O deploy foi feito na plataforma render e pode demorar um pouco pra carregar, mas o serviço está online!
+O deploy foi feito na plataforma render utilizando docker hub e pode demorar um pouco pra carregar, mas o serviço está online!  
 Para interagir com a API, acesse o [Swagger UI](https://catalogo-filmes.onrender.com/api)
 
 ### API
