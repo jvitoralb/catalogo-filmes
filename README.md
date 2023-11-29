@@ -18,7 +18,8 @@ Para interagir com a API, acesse o [Swagger UI](https://catalogo-filmes.onrender
 ### API
 
 #### Auth
-Aqui é onde o usuário faz a sua autenticação. Como o servico de Auth tem contato o serviço User, é por aqui que acontece o registo - `signup` do usuário, ou o acesso - `login` à sua conta. 
+Aqui é onde o usuário faz a sua autenticação, que se dá através da utilização de `JWT` junto à 2 chaves `RSA`, uma pública e outra privada.  
+Como o servico de Auth tem contato o serviço User, é por aqui que acontece o registo - `signup` do usuário, ou o acesso - `login` à sua conta. 
 
 `/auth`:
 - `POST /signup`:
