@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
@@ -34,6 +34,10 @@ export class MovieService {
 
         if (!cachedTargetMovie) {
             const targetMovie = (await this.repository.findBy({ id: movieId }))[0];
+
+            if (!targetMovie) {
+                throw new BadRequestException('Movie does not exist');
+            }
             
             const expiresIn = ((1 * 60) * 60);
             await this.cacheService.setData(cacheKey, JSON.stringify(targetMovie), expiresIn);
@@ -53,6 +57,10 @@ export class MovieService {
     async updateOne(movieId: string, movieUpdates: MovieDto): Promise<Movie> {
         const movieToUpdate = await this.findOne(movieId);
 
+        if (!movieToUpdate) {
+            throw new BadRequestException('Movie does not exist');
+        }
+
         const updated = Object.assign({}, movieToUpdate, movieUpdates);
         updated.id = movieToUpdate.id;
 
@@ -61,7 +69,11 @@ export class MovieService {
         return await this.repository.save(updated);
     }
     async deleteOne(movieId: string): Promise<void> {
-        await this.repository.delete(movieId);
+        const delRes = await this.repository.delete(movieId);
+
+        if (!delRes.affected) {
+            throw new BadRequestException('Movie does not exist');
+        }
 
         await this.cacheService.deleteKeys(['movies', `movies:${movieId}`]);
     }
