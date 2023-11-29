@@ -24,7 +24,7 @@ export class AuthService {
         const token: string = await this.jwtService.signAsync(payload);
 
         return {
-            accessToken: `Bearer ${token}`
+            accessToken: token
         }
     }
     async authUserLogin(userAuth: UserDto) {
@@ -43,7 +43,7 @@ export class AuthService {
         const token: string = await this.jwtService.signAsync(payload);
 
         return {
-            accessToken: `Bearer ${token}`
+            accessToken: token
         }
     }
 
