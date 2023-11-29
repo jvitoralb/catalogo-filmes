@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { MovieModule } from './movies/movie.module';
 import { DatabaseModule } from './database/database.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
     imports: [
@@ -17,8 +19,9 @@ import { DatabaseModule } from './database/database.module';
         AuthModule,
         UserModule
     ],
-    controllers: [],
+    controllers: [AppController],
     providers: [
+        AppService,
         {
             provide: APP_GUARD,
             useClass: AuthGuard,
