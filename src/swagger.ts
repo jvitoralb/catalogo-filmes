@@ -1,23 +1,19 @@
 import { INestApplication } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication) {
     const config = new DocumentBuilder()
         .setTitle('Catálogo de filmes')
         .setDescription('REST API Usada para manusear um catálogo de filmes')
         .setVersion('1.0')
-        // .addBearerAuth()
+        .addBearerAuth()
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
 
-    // const customOptions: SwaggerCustomOptions = {
-    //     swaggerOptions: {
-    //       persistAuthorization: true,
-    //       // defaultModelsExpandDepth: -1,
-    //     },
-    //     customSiteTitle: swaggerConfig.siteTitle,
-    //   };
+    const customOptions: SwaggerCustomOptions = {
+        customSiteTitle: 'Catalogo API - Swagger UI',
+    };
 
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('api', app, document, customOptions);
 }
