@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
-import { MovieService } from '../service/movie.service';
-import { Movie } from '../movie.entity';
+import { MovieService } from './movie.service';
+import { Movie } from './movie.entity';
 import { MovieDto } from './movie.dto';
 
 @Controller('movies')

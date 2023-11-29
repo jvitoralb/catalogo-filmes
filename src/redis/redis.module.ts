@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import { RedisService } from './redis.service';
-import { IOREDIS } from '../config/constants';
+import { IOREDIS } from '../common/constants/constants';
 
 
 @Module({
