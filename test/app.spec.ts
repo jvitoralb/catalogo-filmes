@@ -40,7 +40,7 @@ describe('Application - e2e', () => {
             password: 'adminpassword123'
         });
 
-        authToken = res.body.accessToken;
+        authToken = `Bearer ${res.body.accessToken}`;
 
         expect(res.status).toBe(201);
         expect(res.body).toMatchObject({
