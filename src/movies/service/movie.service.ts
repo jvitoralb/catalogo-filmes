@@ -1,14 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from '../movie.entity';
-import { MOVIE_REPOSITORY } from '../../config/constants';
 import { MovieDto } from '../api/movie.dto';
 import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class MovieService {
     constructor(
-        @Inject(MOVIE_REPOSITORY)
+        @InjectRepository(Movie)
         private readonly repository: Repository<Movie>,
         private readonly cacheService: RedisService
     ) { }
