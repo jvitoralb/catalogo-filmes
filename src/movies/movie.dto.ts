@@ -1,19 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 
 export class MovieDto {
     @ApiProperty()
-    @IsString()
     @IsNotEmpty()
+    @IsString()
     title: string;
 
     @ApiProperty()
-    @IsNumber()
     @IsNotEmpty()
+    @IsNumber()
+    @Min(1800)
+    @Max(2023)
     year: number;
 
     @ApiProperty()
-    @IsString()
     @IsNotEmpty()
+    @IsString()
     description: string;
 }
