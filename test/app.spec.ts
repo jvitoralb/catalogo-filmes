@@ -42,7 +42,7 @@ describe('Application - e2e', () => {
 
         authToken = `Bearer ${res.body.accessToken}`;
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body).toMatchObject({
             accessToken: expect.any(String)
         });
