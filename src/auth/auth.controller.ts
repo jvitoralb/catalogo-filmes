@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { UserDto } from '../users/user.dto';
 import { AuthService } from './auth.service';
 import { Public } from '../common/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('/auth')
 @Controller('auth')
@@ -21,7 +21,8 @@ export class AuthController {
 
     @Public()
     @Post('login')
-    @ApiCreatedResponse({ description: 'Retorna um token para ser usado como authorization header nos request em /movies' })
+    @HttpCode(200)
+    @ApiOkResponse({ description: 'Retorna um token para ser usado como authorization header nos request em /movies' })
     @ApiBadRequestResponse({ description: 'Caso falte propriedades no body ou o email do usuário não está cadastrado' })
     postUserAuth(@Body() userAuth: UserDto) {
         return this.service.authUserLogin(userAuth);
